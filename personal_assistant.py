@@ -1,13 +1,6 @@
 import json
 import csv
 from datetime import datetime
-import sys
-
-
-import json
-import csv
-from datetime import datetime
-import sys
 
 
 class Note:
@@ -18,7 +11,6 @@ class Note:
         self.timestamp = timestamp or datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
     def to_dict(self):
-        """Преобразование объекта в словарь для сохранения в JSON."""
         return {
             "id": self.id,
             "title": self.title,
@@ -28,7 +20,6 @@ class Note:
 
     @staticmethod
     def from_dict(data):
-        """Создание объекта Note из словаря."""
         return Note(
             note_id=data["id"],
             title=data["title"],
@@ -43,7 +34,6 @@ class NotesManager:
         self.notes = self.load_notes()
 
     def load_notes(self):
-        """Загрузка заметок из JSON-файла."""
         try:
             with open(self.filename, "r") as file:
                 data = json.load(file)
@@ -52,12 +42,10 @@ class NotesManager:
             return []
 
     def save_notes(self):
-        """Сохранение заметок в JSON-файл."""
         with open(self.filename, "w") as file:
             json.dump([note.to_dict() for note in self.notes], file, indent=4)
 
     def create_note(self, title, content):
-        """Создание новой заметки."""
         note_id = max([note.id for note in self.notes], default=0) + 1
         note = Note(note_id, title, content)
         self.notes.append(note)
@@ -65,7 +53,6 @@ class NotesManager:
         print(f"Заметка с ID {note_id} создана.")
 
     def list_notes(self):
-        """Просмотр списка заметок."""
         if not self.notes:
             print("Список заметок пуст.")
             return
@@ -74,7 +61,6 @@ class NotesManager:
             print(f"ID: {note.id}, Title: {note.title}, Timestamp: {note.timestamp}")
 
     def view_note_details(self, note_id):
-        """Просмотр подробностей заметки."""
         note = self.find_note_by_id(note_id)
         if note:
             print(f"\nID: {note.id}\nTitle: {note.title}\nContent: {note.content}\nTimestamp: {note.timestamp}")
@@ -82,7 +68,6 @@ class NotesManager:
             print(f"Заметка с ID {note_id} не найдена.")
 
     def edit_note(self, note_id, title=None, content=None):
-        """Редактирование заметки."""
         note = self.find_note_by_id(note_id)
         if note:
             if title:
@@ -96,7 +81,6 @@ class NotesManager:
             print(f"Заметка с ID {note_id} не найдена.")
 
     def delete_note(self, note_id):
-        """Удаление заметки."""
         note = self.find_note_by_id(note_id)
         if note:
             self.notes.remove(note)
@@ -106,7 +90,6 @@ class NotesManager:
             print(f"Заметка с ID {note_id} не найдена.")
 
     def import_from_csv(self, csv_file):
-        """Импорт заметок из CSV."""
         try:
             with open(csv_file, "r") as file:
                 reader = csv.DictReader(file)
@@ -120,7 +103,6 @@ class NotesManager:
             print(f"Файл {csv_file} не найден.")
 
     def export_to_csv(self, csv_file):
-        """Экспорт заметок в CSV."""
         with open(csv_file, "w", newline="") as file:
             fieldnames = ["id", "title", "content", "timestamp"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -147,7 +129,6 @@ class Task:
         self.due_date = due_date or datetime.now().strftime("%d-%m-%Y")
 
     def to_dict(self):
-        """Преобразование объекта в словарь для сохранения в JSON."""
         return {
             "id": self.id,
             "title": self.title,
@@ -159,7 +140,6 @@ class Task:
 
     @staticmethod
     def from_dict(data):
-        """Создание объекта Task из словаря."""
         return Task(
             task_id=data["id"],
             title=data["title"],
@@ -176,7 +156,6 @@ class TasksManager:
         self.tasks = self.load_tasks()
 
     def load_tasks(self):
-        """Загрузка задач из JSON-файла."""
         try:
             with open(self.filename, "r") as file:
                 data = json.load(file)
@@ -185,12 +164,10 @@ class TasksManager:
             return []
 
     def save_tasks(self):
-        """Сохранение задач в JSON-файл."""
         with open(self.filename, "w") as file:
             json.dump([task.to_dict() for task in self.tasks], file, indent=4)
 
     def create_task(self, title, description, priority, due_date):
-        """Добавление новой задачи."""
         task_id = max([task.id for task in self.tasks], default=0) + 1
         task = Task(task_id, title, description, priority=priority, due_date=due_date)
         self.tasks.append(task)
@@ -198,7 +175,6 @@ class TasksManager:
         print(f"Задача с ID {task_id} создана.")
 
     def list_tasks(self):
-        """Просмотр списка задач."""
         if not self.tasks:
             print("Список задач пуст.")
             return
@@ -208,7 +184,6 @@ class TasksManager:
             print(f"ID: {task.id}, Title: {task.title}, Status: {status}, Priority: {task.priority}, Due Date: {task.due_date}")
 
     def mark_task_done(self, task_id):
-        """Отметка задачи как выполненной."""
         task = self.find_task_by_id(task_id)
         if task:
             task.done = True
@@ -218,7 +193,6 @@ class TasksManager:
             print(f"Задача с ID {task_id} не найдена.")
 
     def edit_task(self, task_id, title=None, description=None, priority=None, due_date=None):
-        """Редактирование задачи."""
         task = self.find_task_by_id(task_id)
         if task:
             if title:
@@ -235,7 +209,6 @@ class TasksManager:
             print(f"Задача с ID {task_id} не найдена.")
 
     def delete_task(self, task_id):
-        """Удаление задачи."""
         task = self.find_task_by_id(task_id)
         if task:
             self.tasks.remove(task)
@@ -245,7 +218,6 @@ class TasksManager:
             print(f"Задача с ID {task_id} не найдена.")
 
     def import_from_csv(self, csv_file):
-        """Импорт задач из CSV."""
         try:
             with open(csv_file, "r") as file:
                 reader = csv.DictReader(file)
@@ -261,7 +233,6 @@ class TasksManager:
             print(f"Файл {csv_file} не найден.")
 
     def export_to_csv(self, csv_file):
-        """Экспорт задач в CSV."""
         with open(csv_file, "w", newline="") as file:
             fieldnames = ["id", "title", "description", "done", "priority", "due_date"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -288,7 +259,6 @@ class TasksManager:
                 print(f"ID: {task.id}, Title: {task.title}, Status: {status_str}, Priority: {task.priority}, Due Date: {task.due_date}")
 
     def find_task_by_id(self, task_id):
-        """Поиск задачи по ID."""
         for task in self.tasks:
             if task.id == task_id:
                 return task
@@ -303,7 +273,6 @@ class Contact:
         self.email = email
 
     def to_dict(self):
-        """Преобразование объекта в словарь для сохранения в JSON."""
         return {
             "id": self.id,
             "name": self.name,
@@ -313,7 +282,6 @@ class Contact:
 
     @staticmethod
     def from_dict(data):
-        """Создание объекта Contact из словаря."""
         return Contact(
             contact_id=data["id"],
             name=data["name"],
@@ -328,7 +296,6 @@ class ContactsManager:
         self.contacts = self.load_contacts()
 
     def load_contacts(self):
-        """Загрузка контактов из JSON-файла."""
         try:
             with open(self.filename, "r") as file:
                 data = json.load(file)
@@ -337,12 +304,10 @@ class ContactsManager:
             return []
 
     def save_contacts(self):
-        """Сохранение контактов в JSON-файл."""
         with open(self.filename, "w") as file:
             json.dump([contact.to_dict() for contact in self.contacts], file, indent=4)
 
     def add_contact(self, name, phone, email):
-        """Добавление нового контакта."""
         contact_id = max([contact.id for contact in self.contacts], default=0) + 1
         contact = Contact(contact_id, name, phone, email)
         self.contacts.append(contact)
@@ -350,7 +315,6 @@ class ContactsManager:
         print(f"Контакт с ID {contact_id} добавлен.")
 
     def find_contacts(self, query):
-        """Поиск контакта по имени или номеру телефона."""
         results = [
             contact for contact in self.contacts
             if query.lower() in contact.name.lower() or query in contact.phone
@@ -363,7 +327,6 @@ class ContactsManager:
             print("Контакты не найдены.")
 
     def edit_contact(self, contact_id, name=None, phone=None, email=None):
-        """Редактирование контакта."""
         contact = self.find_contact_by_id(contact_id)
         if contact:
             if name:
@@ -378,7 +341,6 @@ class ContactsManager:
             print(f"Контакт с ID {contact_id} не найден.")
 
     def delete_contact(self, contact_id):
-        """Удаление контакта."""
         contact = self.find_contact_by_id(contact_id)
         if contact:
             self.contacts.remove(contact)
@@ -388,7 +350,6 @@ class ContactsManager:
             print(f"Контакт с ID {contact_id} не найден.")
 
     def import_from_csv(self, csv_file):
-        """Импорт контактов из CSV."""
         try:
             with open(csv_file, "r") as file:
                 reader = csv.DictReader(file)
@@ -403,7 +364,6 @@ class ContactsManager:
             print(f"Файл {csv_file} не найден.")
 
     def export_to_csv(self, csv_file):
-        """Экспорт контактов в CSV."""
         with open(csv_file, "w", newline="") as file:
             fieldnames = ["id", "name", "phone", "email"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -429,7 +389,6 @@ class FinanceRecord:
         self.description = description
 
     def to_dict(self):
-        """Преобразование объекта в словарь для сохранения в JSON."""
         return {
             "id": self.id,
             "amount": self.amount,
@@ -440,7 +399,6 @@ class FinanceRecord:
 
     @staticmethod
     def from_dict(data):
-        """Создание объекта FinanceRecord из словаря."""
         return FinanceRecord(
             record_id=data["id"],
             amount=data["amount"],
@@ -456,7 +414,6 @@ class FinanceManager:
         self.records = self.load_records()
 
     def load_records(self):
-        """Загрузка финансовых записей из JSON-файла."""
         try:
             with open(self.filename, "r") as file:
                 data = json.load(file)
@@ -465,12 +422,10 @@ class FinanceManager:
             return []
 
     def save_records(self):
-        """Сохранение финансовых записей в JSON-файл."""
         with open(self.filename, "w") as file:
             json.dump([record.to_dict() for record in self.records], file, indent=4)
 
     def add_record(self, amount, category, date, description):
-        """Добавление новой финансовой записи."""
         record_id = max([record.id for record in self.records], default=0) + 1
         record = FinanceRecord(record_id, amount, category, date, description)
         self.records.append(record)
@@ -478,7 +433,6 @@ class FinanceManager:
         print(f"Финансовая запись с ID {record_id} добавлена.")
 
     def list_records(self, category=None, date=None):
-        """Просмотр всех записей с фильтрацией по дате или категории."""
         filtered_records = self.records
         if category:
             filtered_records = [record for record in filtered_records if record.category == category]
@@ -493,12 +447,10 @@ class FinanceManager:
                 print(f"ID: {record.id}, Amount: {record.amount}, Category: {record.category}, Date: {record.date}, Description: {record.description}")
 
     def calculate_balance(self):
-        """Подсчёт общего баланса."""
         balance = sum(record.amount for record in self.records)
         print(f"\nОбщий баланс: {balance:.2f}")
 
     def group_by_category(self):
-        """Группировка записей по категориям."""
         categories = {}
         for record in self.records:
             if record.category not in categories:
@@ -510,7 +462,6 @@ class FinanceManager:
             print(f"Категория: {category}, Сумма: {total:.2f}")
 
     def generate_report(self, start_date, end_date):
-        """Генерация отчёта за определённый период."""
         records_in_period = [
             record for record in self.records
             if start_date <= record.date <= end_date
@@ -525,7 +476,6 @@ class FinanceManager:
             print(f"\nОбщий итог за период: {total_amount:.2f}")
 
     def import_from_csv(self, csv_file):
-        """Импорт финансовых записей из CSV."""
         try:
             with open(csv_file, "r") as file:
                 reader = csv.DictReader(file)
@@ -541,7 +491,6 @@ class FinanceManager:
             print(f"Файл {csv_file} не найден.")
 
     def export_to_csv(self, csv_file):
-        """Экспорт финансовых записей в CSV."""
         with open(csv_file, "w", newline="") as file:
             fieldnames = ["id", "amount", "category", "date", "description"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -558,14 +507,11 @@ class Calculator:
         pass
 
     def calculate(self, expression):
-        """Выполняет расчёт математического выражения."""
         try:
-            # Разрешаем только цифры, операторы и пробелы
             allowed_chars = "0123456789+-*/.() "
             if not all(char in allowed_chars for char in expression):
                 raise ValueError("Выражение содержит недопустимые символы.")
 
-            # Вычисление результата
             result = eval(expression)
             return result
         except ZeroDivisionError:
@@ -586,7 +532,6 @@ class PersonalAssistant:
         self.calculator = Calculator()
 
     def display_menu(self):
-        """Отображение главного меню."""
         print("\nДобро пожаловать в Персональный помощник!")
         print("Выберите действие:")
         print("1. Управление заметками")
@@ -597,7 +542,6 @@ class PersonalAssistant:
         print("6. Выход")
 
     def handle_input(self):
-        """Обработка ввода пользователя."""
         try:
             choice = int(input("Введите номер действия: "))
             if choice == 1:
@@ -608,6 +552,8 @@ class PersonalAssistant:
                 self.manage_contacts()
             elif choice == 4:
                 self.manage_finances()
+            elif choice == 5:
+                self.run_calculator()
             elif choice == 6:
                 self.exit_app()
             else:
@@ -616,7 +562,6 @@ class PersonalAssistant:
             print("Пожалуйста, введите число от 1 до 6.")
 
         def manage_finances(self):
-            """Меню управления финансовыми записями."""
             while True:
                 print("\nУправление финансовыми записями:")
                 print("1. Добавить запись")
@@ -662,9 +607,8 @@ class PersonalAssistant:
                     print("Пожалуйста, введите корректное число.")
 
     def run_calculator(self):
-        """Запуск калькулятора."""
         print("\nКалькулятор:")
-        print("Введите математическое выражение (например, 2 + 3 * 4).")
+        print("Введите математическое выражение.")
         print("Введите 'exit', чтобы вернуться в главное меню.")
         while True:
             expression = input("Введите выражение: ").strip()
@@ -676,7 +620,6 @@ class PersonalAssistant:
 
 
     def manage_contacts(self):
-        """Меню управления контактами."""
         while True:
             print("\nУправление контактами:")
             print("1. Добавить контакт")
@@ -720,7 +663,6 @@ class PersonalAssistant:
 
 
     def manage_tasks(self):
-        """Меню управления задачами."""
         while True:
             print("\nУправление задачами:")
             print("1. Добавить задачу")
@@ -778,7 +720,6 @@ class PersonalAssistant:
                 print("Пожалуйста, введите корректное число.")
 
     def manage_notes(self):
-        """Меню управления заметками."""
         while True:
             print("\nУправление заметками:")
             print("1. Создать заметку")
@@ -826,7 +767,6 @@ class PersonalAssistant:
         self.running = False
 
     def run(self):
-        """Запуск приложения."""
         while self.running:
             self.display_menu()
             self.handle_input()
